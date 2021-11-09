@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Dropdown } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +8,7 @@ import { addBookToShelf } from "../../../api/shelfAPI";
 import { BookDescription } from "../../../globalTypes";
 import { updateCurentBookId } from "../../../store/bookSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import dotsIcon from "../../../pictures/dots.png";
 
 interface IBookOnShelf {
   book: BookDescription;
@@ -41,6 +42,8 @@ const BookOnShelf: FC<IBookOnShelf> = ({
     dispatch(updateCurentBookId({ bookId: book.id }));
   };
 
+  const hasDropdown = Boolean(removeButton);
+
   return (
     <>
       <ConfirmDeleteModal
@@ -50,11 +53,27 @@ const BookOnShelf: FC<IBookOnShelf> = ({
         onUpdateBooks={onUpdateBooks}
       />
       <StyledCard key={book.id}>
-        <Card.Header>
-          <Card.Title>
+        <StyledCardHeader>
+          <StyledCardTitle>
             {book.title}, {book.author}
-          </Card.Title>
-        </Card.Header>
+          </StyledCardTitle>
+          {hasDropdown && (
+            <Dropdown align="end">
+              <Dropdown.Toggle
+                variant="outline-secondary"
+                id="dropdown-basic"
+              ></Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                {removeButton && (
+                  <Dropdown.Item onClick={() => setShowModal(true)}>
+                    Удалить книгу
+                  </Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
+        </StyledCardHeader>
         <MainPartWrapper>
           <Card.Text>{book.description}</Card.Text>
           <div>
@@ -67,14 +86,6 @@ const BookOnShelf: FC<IBookOnShelf> = ({
               <Link to="/read" onClick={handleGoToRead}>
                 <StyledButton variant="primary">Читать</StyledButton>
               </Link>
-            )}
-            {removeButton && (
-              <StyledButton
-                variant="outline-danger"
-                onClick={() => setShowModal(true)}
-              >
-                Удалить книгу
-              </StyledButton>
             )}
           </div>
         </MainPartWrapper>
@@ -104,6 +115,17 @@ const StyledCard = styled(Card)`
   min-width: 335px;
   margin-top: 20px;
   flex-grow: 10;
+`;
+
+const StyledCardHeader = styled(Card.Header)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StyledCardTitle = styled(Card.Title)`
+  margin-bottom: 0px;
+  margin-right: 20px;
 `;
 
 export default BookOnShelf;
