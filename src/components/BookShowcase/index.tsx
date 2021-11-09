@@ -12,12 +12,16 @@ interface IBookShowcase {
   books?: Array<BookDescription>;
   addToShelfButton?: boolean;
   goToReadButton?: boolean;
+  removeButton?: boolean;
+  onUpdateBooks?: () => void;
 }
 
 const BookShowcase: FC<IBookShowcase> = ({
   books,
   addToShelfButton,
   goToReadButton,
+  removeButton,
+  onUpdateBooks,
 }) => {
   const user = useSelector((state: RootState) => state.user);
 
@@ -29,6 +33,8 @@ const BookShowcase: FC<IBookShowcase> = ({
           email={user.email}
           addToShelfButton={addToShelfButton}
           goToReadButton={goToReadButton}
+          removeButton={removeButton}
+          onUpdateBooks={onUpdateBooks}
         ></BookOnShelf>
       ))}
     </StyledShowcase>
@@ -37,11 +43,11 @@ const BookShowcase: FC<IBookShowcase> = ({
 
 const StyledShowcase = styled.div`
   display: flex;
+  align-items: stretch;
   flex-wrap: wrap;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
   margin: 20px;
-  align-items: center;
   padding: 0px 20px 20px;
 `;
 

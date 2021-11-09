@@ -12,9 +12,8 @@ import { UserRole } from "../../globalTypes";
 
 const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const isUserAuth = useSelector((state: RootState) =>
-    Boolean(state.user?.email)
-  );
+  const user = useSelector((state: RootState) => state.user);
+  const isUserAuth = Boolean(user?.email);
 
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +35,7 @@ const Header = () => {
       <LoginModal onHide={() => setShowModal(false)} isVisible={showModal} />
       <Navbar bg="light" expand="lg">
         <Container>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand href="/shop">
             <StyledBookIcon src={BooksIcon} />
             dotLibrary
           </Navbar.Brand>
@@ -54,6 +53,9 @@ const Header = () => {
               </Nav>
             ) : (
               <Nav className="justify-content-end">
+                <StyledNavLink onClick={handleLogout} disabled>
+                  {user.email}
+                </StyledNavLink>
                 <Nav.Link onClick={handleLogout}>Выход</Nav.Link>
               </Nav>
             )}
@@ -63,6 +65,10 @@ const Header = () => {
     </>
   );
 };
+
+const StyledNavLink = styled(Nav.Link)`
+  color: red;
+`;
 
 const StyledBookIcon = styled.img`
   width: 40px;

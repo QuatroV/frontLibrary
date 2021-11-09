@@ -5,14 +5,19 @@ import LibraryCarousel from "./components/LibraryCarousel";
 import BookShowcase from "../../components/BookShowcase";
 import { BookDescription } from "../../globalTypes";
 import { getAllBooksNamesAuthorsAndDescriptions } from "../../api/bookAPI";
+import ButtonPanel from "./components/ButtonPanel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const MainPage: FC = () => {
-  const [books, setText] = useState<BookDescription[]>([]);
+  const [books, setBooks] = useState<BookDescription[]>([]);
 
   const fetchBooks = async () => {
     const booksFromServer = await getAllBooksNamesAuthorsAndDescriptions();
-    setText((prevState) => prevState.concat(booksFromServer));
+    setBooks(booksFromServer);
   };
+
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     fetchBooks();
@@ -21,7 +26,13 @@ const MainPage: FC = () => {
   return (
     <div>
       <LibraryCarousel />
-      <BookShowcase books={books} addToShelfButton />
+      <ButtonPanel onUpdateBooks={fetchBooks} />
+      <BookShowcase
+        books={books}
+        onUpdateBooks={fetchBooks}
+        addToShelfButton
+        removeButton={user.role === "ADMIN"}
+      />
     </div>
   );
 };
