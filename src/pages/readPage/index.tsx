@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { BookDescription } from "../../globalTypes";
+import { Book, BookDescription } from "../../globalTypes";
 import {
   getAllBooksNamesAuthorsAndDescriptions,
+  getBook,
   getBookText,
   getBookTextByPage,
 } from "../../api/bookAPI";
@@ -11,40 +12,93 @@ import { getShelfBooks } from "../../api/shelfAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import BookShowcase from "../../components/BookShowcase";
+import { Spinner, Button, ListGroup } from "react-bootstrap";
+import { useInterval } from "../../utils/hooks";
+import BookmarkContainer from "./components/BookmarkContainer";
+import dotsIcon from "../../pictures/dots.png";
 
 const ReadPage: FC = () => {
   const [text, setText] = useState<string>("");
+  const [bookInfo, setBookInfo] = useState<Omit<Book, "text">>();
+
+  const [loading, setLoading] = useState(false);
 
   const user = useSelector((state: RootState) => state.user);
   const currentBook = useSelector((state: RootState) => state.book);
 
-  const fetchBookText = async () => {
+  const [showSidebar, setShowSidebar] = useState(true);
+
+  const fetchBookTextAndInfo = async () => {
     if (!currentBook.currentBookId) return null;
-    const page = await getBookText(user.email, currentBook.currentBookId);
-    setText((prevState) => prevState.concat(page));
+    setLoading(true);
+    const { bookInfo } = await getBook(currentBook.currentBookId);
+    const textFromServer = await getBookText(
+      user.email,
+      currentBook.currentBookId
+    );
+    setText((prevState) => prevState.concat(textFromServer));
+    setBookInfo(bookInfo[0]);
+    setLoading(false);
   };
 
   useEffect(() => {
-    fetchBookText();
+    fetchBookTextAndInfo();
   }, [user]);
+
+  const bookText = document.querySelector("#readContainer") as HTMLElement;
+
+  const calcProgress = () => {
+    if (!bookText) return 0;
+    const currentPosition = bookText.scrollTop;
+    const maxPosition = bookText.scrollHeight - bookText.clientHeight;
+    const progressOfReading = (currentPosition / maxPosition) * 100;
+    return progressOfReading;
+  };
 
   return (
     <StyledReadPageWrapper>
-      <StyledTextWrapper>{text}</StyledTextWrapper>
+      {showSidebar ? (
+        <BookmarkContainer
+          email={user.email}
+          book={bookInfo}
+          getProgress={calcProgress}
+          textElement={bookText}
+          onHide={() => setShowSidebar(false)}
+        />
+      ) : (
+        <StyledImg src={dotsIcon} onClick={() => setShowSidebar(true)} />
+      )}
+      <StyledReadWrapper id="readContainer">
+        {loading ? (
+          <Spinner animation="border" role="status" />
+        ) : (
+          <StyledTextWrapper>{text}</StyledTextWrapper>
+        )}
+      </StyledReadWrapper>
     </StyledReadPageWrapper>
   );
 };
+
+const StyledImg = styled.img`
+  cursor: pointer;
+  height: 30px;
+`;
+
+const StyledReadPageWrapper = styled.div`
+  display: flex;
+  margin: 20px 20%;
+  align-items: flex-start;
+`;
 
 const StyledTextWrapper = styled.div`
   white-space: pre-line;
 `;
 
-const StyledReadPageWrapper = styled.div`
+const StyledReadWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
-  margin: 20px 20%;
   align-items: center;
   padding: 20px;
   overflow: auto;

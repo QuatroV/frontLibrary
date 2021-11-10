@@ -14,3 +14,10 @@ export type User = {
   password: string;
   role: UserRole;
 };
+
+export type ShelfItem = {
+  id: number;
+  progress: number;
+  shelfId: number;
+  userId: number;
+};

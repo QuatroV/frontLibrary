@@ -1,6 +1,5 @@
-import { BookDescription, User } from "../globalTypes";
-import { $host, $authHost } from "./index";
-import jwt_decode from "jwt-decode";
+import { BookDescription, ShelfItem } from "../globalTypes";
+import { $authHost } from "./index";
 
 export const addBookToShelf = async (email: string, bookId: number) => {
   const { data } = await $authHost.post<{ data: any }>(
@@ -15,5 +14,28 @@ export const getShelfBooks = async (email: string) => {
     "api/shelf/getShelfBooks",
     { email }
   );
+  return data;
+};
+
+export const addBookmarkToShelfItem = async (
+  progress: number,
+  bookId: number,
+  email: string
+) => {
+  const data = await $authHost.post<ShelfItem>(
+    "api/shelf/addBookmarkToShelfItem",
+    {
+      email,
+      progress,
+      bookId,
+    }
+  );
+  return data;
+};
+
+export const getBookmark = async (bookId: number, email: string) => {
+  const { data } = await $authHost.get<number>("api/shelf/getBookmark", {
+    params: { bookId, email },
+  });
   return data;
 };
