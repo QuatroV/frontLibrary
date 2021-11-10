@@ -5,6 +5,8 @@ export type BookDescription = {
   description: string;
 };
 
+export type Book = BookDescription & { annotation: string; text: string };
+
 export type UserRole = "USER" | "ADMIN" | null;
 
 export type User = {

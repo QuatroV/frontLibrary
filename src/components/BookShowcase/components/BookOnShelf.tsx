@@ -8,14 +8,14 @@ import { addBookToShelf } from "../../../api/shelfAPI";
 import { BookDescription } from "../../../globalTypes";
 import { updateCurentBookId } from "../../../store/bookSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-import dotsIcon from "../../../pictures/dots.png";
+import EditModal from "./EditModal";
 
 interface IBookOnShelf {
   book: BookDescription;
   email: string;
   addToShelfButton?: boolean;
   goToReadButton?: boolean;
-  removeButton?: boolean;
+  editable?: boolean;
   onUpdateBooks?: () => void;
 }
 
@@ -24,10 +24,11 @@ const BookOnShelf: FC<IBookOnShelf> = ({
   email,
   addToShelfButton,
   goToReadButton,
-  removeButton,
+  editable,
   onUpdateBooks,
 }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const handleAddToShelf = async () => {
     addBookToShelf(email, book.id);
@@ -42,13 +43,19 @@ const BookOnShelf: FC<IBookOnShelf> = ({
     dispatch(updateCurentBookId({ bookId: book.id }));
   };
 
-  const hasDropdown = Boolean(removeButton);
+  const hasDropdown = Boolean(editable);
 
   return (
     <>
       <ConfirmDeleteModal
-        isVisible={showModal}
-        onHide={() => setShowModal(false)}
+        isVisible={showConfirmDeleteModal}
+        onHide={() => setShowConfirmDeleteModal(false)}
+        book={book}
+        onUpdateBooks={onUpdateBooks}
+      />
+      <EditModal
+        isVisible={showEditModal}
+        onHide={() => setShowEditModal(false)}
         book={book}
         onUpdateBooks={onUpdateBooks}
       />
@@ -65,11 +72,12 @@ const BookOnShelf: FC<IBookOnShelf> = ({
               ></Dropdown.Toggle>
 
               <Dropdown.Menu>
-                {removeButton && (
-                  <Dropdown.Item onClick={() => setShowModal(true)}>
-                    Удалить книгу
-                  </Dropdown.Item>
-                )}
+                <Dropdown.Item onClick={() => setShowEditModal(true)}>
+                  Изменить информацию о книге
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => setShowConfirmDeleteModal(true)}>
+                  Удалить книгу
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           )}

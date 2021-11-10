@@ -31,7 +31,7 @@ const MainPage: FC = () => {
         books={books}
         onUpdateBooks={fetchBooks}
         addToShelfButton
-        removeButton={user.role === "ADMIN"}
+        editable={user.role === "ADMIN"}
       />
     </div>
   );

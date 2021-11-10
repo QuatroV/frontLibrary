@@ -1,4 +1,4 @@
-import { BookDescription, User } from "../globalTypes";
+import { Book, BookDescription, User } from "../globalTypes";
 import { $host, $authHost } from "./index";
 
 export const getAllBooksNamesAuthorsAndDescriptions = async () => {
@@ -59,6 +59,36 @@ export const deleteBook = async (bookId: number) => {
     "api/book/deleteBook",
     {
       data: { bookId },
+    }
+  );
+  return data;
+};
+
+export const getBook = async (bookId: number) => {
+  const { data } = await $authHost.get<{ bookInfo: Omit<Book, "text">[] }>(
+    "api/book/getBook",
+    {
+      params: { bookId },
+    }
+  );
+  return data;
+};
+
+export const updateBookInfo = async (
+  bookId: number,
+  title: string,
+  author: string,
+  description: string,
+  annotation: string
+) => {
+  const { data } = await $authHost.patch<{ bookInfo: Omit<Book, "text">[] }>(
+    "api/book/updateBookInfo",
+    {
+      bookId,
+      title,
+      author,
+      description,
+      annotation,
     }
   );
   return data;
