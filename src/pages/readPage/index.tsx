@@ -82,6 +82,7 @@ const ReadPage: FC = () => {
 const StyledImg = styled.img`
   cursor: pointer;
   height: 30px;
+  margin-right: 10px;
 `;
 
 const StyledReadPageWrapper = styled.div`
