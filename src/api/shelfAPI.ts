@@ -39,3 +39,15 @@ export const getBookmark = async (bookId: number, email: string) => {
   });
   return data;
 };
+
+export const removeBookFromShelf = async (bookId: number, email: string) => {
+  const {
+    data: { message },
+  } = await $authHost.delete<{ message: string }>(
+    "api/shelf/removeBookFromShelf",
+    {
+      params: { bookId, email },
+    }
+  );
+  return message;
+};

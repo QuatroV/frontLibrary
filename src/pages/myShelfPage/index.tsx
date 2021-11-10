@@ -15,7 +15,7 @@ const ShelfPage: FC = () => {
 
   const fetchBooks = async () => {
     const booksFromServer = await getShelfBooks(user.email);
-    setBooks((prevState) => prevState.concat(booksFromServer));
+    setBooks(booksFromServer);
   };
 
   useEffect(() => {
@@ -24,7 +24,12 @@ const ShelfPage: FC = () => {
 
   return (
     <>
-      <BookShowcase books={books} goToReadButton />
+      <BookShowcase
+        books={books}
+        onUpdateBooks={fetchBooks}
+        goToReadButton
+        removeFromShelfButton
+      />
     </>
   );
 };

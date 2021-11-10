@@ -12,6 +12,7 @@ interface IBookShowcase {
   books?: Array<BookDescription>;
   addToShelfButton?: boolean;
   goToReadButton?: boolean;
+  removeFromShelfButton?: boolean;
   editable?: boolean;
   onUpdateBooks?: () => void;
 }
@@ -22,6 +23,7 @@ const BookShowcase: FC<IBookShowcase> = ({
   goToReadButton,
   editable,
   onUpdateBooks,
+  removeFromShelfButton,
 }) => {
   const user = useSelector((state: RootState) => state.user);
 
@@ -33,6 +35,7 @@ const BookShowcase: FC<IBookShowcase> = ({
           email={user.email}
           addToShelfButton={addToShelfButton}
           goToReadButton={goToReadButton}
+          removeFromShelfButton={removeFromShelfButton}
           editable={editable}
           onUpdateBooks={onUpdateBooks}
         ></BookOnShelf>

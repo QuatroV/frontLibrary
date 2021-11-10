@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { deleteBook } from "../../../api/bookAPI";
-import { addBookToShelf } from "../../../api/shelfAPI";
+import { addBookToShelf, removeBookFromShelf } from "../../../api/shelfAPI";
 import { BookDescription } from "../../../globalTypes";
 import { updateCurentBookId } from "../../../store/bookSlice";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
@@ -15,6 +15,7 @@ interface IBookOnShelf {
   email: string;
   addToShelfButton?: boolean;
   goToReadButton?: boolean;
+  removeFromShelfButton?: boolean;
   editable?: boolean;
   onUpdateBooks?: () => void;
 }
@@ -26,12 +27,13 @@ const BookOnShelf: FC<IBookOnShelf> = ({
   goToReadButton,
   editable,
   onUpdateBooks,
+  removeFromShelfButton,
 }) => {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const handleAddToShelf = async () => {
-    addBookToShelf(email, book.id);
+    await addBookToShelf(email, book.id);
     if (onUpdateBooks) {
       onUpdateBooks();
     }
@@ -44,6 +46,13 @@ const BookOnShelf: FC<IBookOnShelf> = ({
   };
 
   const hasDropdown = Boolean(editable);
+
+  const handleRemoveFromShelf = async () => {
+    await removeBookFromShelf(book.id, email);
+    if (onUpdateBooks) {
+      onUpdateBooks();
+    }
+  };
 
   return (
     <>
@@ -94,6 +103,14 @@ const BookOnShelf: FC<IBookOnShelf> = ({
               <Link to="/read" onClick={handleGoToRead}>
                 <StyledButton variant="primary">Читать</StyledButton>
               </Link>
+            )}
+            {removeFromShelfButton && (
+              <StyledButton
+                variant="outline-danger"
+                onClick={handleRemoveFromShelf}
+              >
+                Убрать с полки
+              </StyledButton>
             )}
           </div>
         </MainPartWrapper>
