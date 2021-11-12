@@ -4,14 +4,18 @@ import {
   Button,
   InputGroup,
   FormControl,
+  Form,
   Tabs,
   Tab,
   Alert,
+  DropdownButton,
+  Dropdown,
+  FloatingLabel,
 } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { registration, login } from "../../../api/userAPI";
-import { RootState } from "../../../store/store";
+import { UserRole } from "../../../globalTypes";
 import { updateEmailAndRole } from "../../../store/userSlice";
 
 interface ILoginModal {
@@ -26,22 +30,40 @@ const LoginModal: FC<ILoginModal> = ({ isVisible, onHide }) => {
   const [alertText, setAlertText] = useState("");
 
   const dispatch = useDispatch();
+
   const handleRegistrationBtnClick = async () => {
     try {
-      await registration(email, password);
-      dispatch(updateEmailAndRole({ email, role: "ADMIN" }));
+      await registration(email, password, role[1]);
+      dispatch(updateEmailAndRole({ email, role: role[1] }));
       onHide();
     } catch (e: any) {
       setAlertText(e.response.data.message);
     }
   };
+
   const handleLoginBtnClick = async () => {
     try {
       await login(email, password);
-      dispatch(updateEmailAndRole({ email, role: "ADMIN" }));
+      dispatch(updateEmailAndRole({ email, role: role[1] }));
       onHide();
     } catch (e: any) {
       setAlertText(e.response.data.message);
+    }
+  };
+
+  const [role, setRole] = useState<[string, UserRole]>([
+    "Пользователь",
+    "USER",
+  ]);
+
+  const handleSelect = (e: any) => {
+    switch (e) {
+      case "USER":
+        setRole(["Пользователь", e]);
+        break;
+      case "ADMIN":
+        setRole(["Администратор", e]);
+        break;
     }
   };
 
@@ -64,23 +86,27 @@ const LoginModal: FC<ILoginModal> = ({ isVisible, onHide }) => {
               </Alert>
             )}
             <InputGroup className="mb-3">
-              <FormControl
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="e-mail"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
+              <StyledFloatingLabel controlId="floatingEmail" label="E-mail">
+                <FormControl
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="e-mail"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </StyledFloatingLabel>
             </InputGroup>
             <InputGroup className="mb-3">
-              <FormControl
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="пароль"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                type="password"
-              />
+              <StyledFloatingLabel controlId="floatingEmail" label="Пароль">
+                <FormControl
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="пароль"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                  type="password"
+                />
+              </StyledFloatingLabel>
             </InputGroup>
           </Modal.Body>
           <Modal.Footer>
@@ -105,24 +131,37 @@ const LoginModal: FC<ILoginModal> = ({ isVisible, onHide }) => {
               </Alert>
             )}
             <InputGroup className="mb-3">
-              <FormControl
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="e-mail"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
+              <StyledFloatingLabel controlId="floatingEmail" label="E-mail">
+                <FormControl
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="e-mail"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                />
+              </StyledFloatingLabel>
             </InputGroup>
             <InputGroup className="mb-3">
-              <FormControl
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="пароль"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-                type="password"
-              />
+              <StyledFloatingLabel controlId="floatingEmail" label="Пароль">
+                <FormControl
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="пароль"
+                  aria-label="Username"
+                  aria-describedby="basic-addon1"
+                  type="password"
+                />
+              </StyledFloatingLabel>
             </InputGroup>
+            <Form.Label>Роль:</Form.Label>
+            <DropdownButton
+              id="dropdown-basic-button"
+              title={role[0]}
+              onSelect={handleSelect}
+            >
+              <Dropdown.Item eventKey="USER">Пользователь</Dropdown.Item>
+              <Dropdown.Item eventKey="ADMIN">Администратор</Dropdown.Item>
+            </DropdownButton>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={handleRegistrationBtnClick}>
@@ -134,6 +173,10 @@ const LoginModal: FC<ILoginModal> = ({ isVisible, onHide }) => {
     </Modal>
   );
 };
+
+const StyledFloatingLabel = styled(FloatingLabel)`
+  width: 100%;
+`;
 
 const StyledTabs = styled(Tabs)``;
 

@@ -1,19 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { Book, BookDescription } from "../../globalTypes";
-import {
-  getAllBooksNamesAuthorsAndDescriptions,
-  getBook,
-  getBookText,
-  getBookTextByPage,
-} from "../../api/bookAPI";
-import { getShelfBooks } from "../../api/shelfAPI";
+import { Book } from "../../globalTypes";
+import { getBook, getBookText } from "../../api/bookAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import BookShowcase from "../../components/BookShowcase";
-import { Spinner, Button, ListGroup } from "react-bootstrap";
-import { useInterval } from "../../utils/hooks";
+import { Spinner } from "react-bootstrap";
 import BookmarkContainer from "./components/BookmarkContainer";
 import dotsIcon from "../../pictures/dots.png";
 

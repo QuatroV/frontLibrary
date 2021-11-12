@@ -7,6 +7,7 @@ import { addBookToShelf } from "../../api/shelfAPI";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import BookOnShelf from "./components/BookOnShelf";
+import EmptyContainerSkeleton from "./components/EmptyContainerSkeleton";
 
 interface IBookShowcase {
   books?: Array<BookDescription>;
@@ -40,6 +41,7 @@ const BookShowcase: FC<IBookShowcase> = ({
           onUpdateBooks={onUpdateBooks}
         ></BookOnShelf>
       ))}
+      {!books?.length && <EmptyContainerSkeleton />}
     </StyledShowcase>
   );
 };

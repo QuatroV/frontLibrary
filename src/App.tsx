@@ -1,13 +1,16 @@
 import styled from "styled-components";
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 import ShopPage from "./pages/shopPage";
 import MyShelfPage from "./pages/myShelfPage";
 import ReadPage from "./pages/readPage";
 
-import BooksIcon from "./pictures/books.png";
 import Header from "./components/Header";
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
             </Route>
             <Route path="/read">
               <ReadPage />
+            </Route>
+            <Route path="/">
+              <Redirect to="/shop" />
             </Route>
           </Switch>
         </Router>

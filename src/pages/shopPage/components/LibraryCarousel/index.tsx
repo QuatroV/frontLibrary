@@ -3,43 +3,45 @@ import styled from "styled-components";
 
 import { Carousel } from "react-bootstrap";
 
-import libraryPicture from "../../../../pictures/libraryPicture1.jpg";
+import libraryPicture1 from "../../../../pictures/libraryPicture1.jpg";
+import libraryPicture2 from "../../../../pictures/libraryPicture2.jpg";
+import libraryPicture3 from "../../../../pictures/libraryPicture3.jpg";
 
 const LibraryCarousel: FC = () => {
   return (
     <Carousel>
       <Carousel.Item>
         <StyledImgWrapper>
-          <img className="d-block" src={libraryPicture} alt="First slide" />
+          <img className="d-block" src={libraryPicture1} alt="First slide" />
         </StyledImgWrapper>
         <Carousel.Caption>
           <StyledLabelBackground>
             <h3>Откройте мир русской классической литературы</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <p>Откройте для себя чудесный мир чтения</p>
           </StyledLabelBackground>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
         <StyledImgWrapper>
-          <img className="d-block" src={libraryPicture} alt="Second slide" />
+          <img className="d-block" src={libraryPicture2} alt="Second slide" />
         </StyledImgWrapper>
 
         <Carousel.Caption>
           <StyledLabelBackground>
-            <h3>Откройте мир русской классической литературы</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h3>Познакомьтесь с иностранной классикой</h3>
+            <p>Откройте для себя чудесный мир чтения</p>
           </StyledLabelBackground>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
         <StyledImgWrapper>
-          <img className="d-block" src={libraryPicture} alt="Third slide" />
+          <img className="d-block" src={libraryPicture3} alt="Third slide" />
         </StyledImgWrapper>
 
         <Carousel.Caption>
           <StyledLabelBackground>
-            <h3>Откройте мир русской классической литературы</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h3>Познакомьтесь с произведениями представителей бит-поколения</h3>
+            <p>Откройте для себя чудесный мир чтения</p>
           </StyledLabelBackground>
         </Carousel.Caption>
       </Carousel.Item>

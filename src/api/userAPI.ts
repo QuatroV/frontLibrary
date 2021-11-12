@@ -1,14 +1,18 @@
-import { User } from "../globalTypes";
+import { User, UserRole } from "../globalTypes";
 import { $host, $authHost } from "./index";
 import jwt_decode from "jwt-decode";
 
-export const registration = async (email: string, password: string) => {
+export const registration = async (
+  email: string,
+  password: string,
+  role: UserRole
+) => {
   const { data } = await $host.post<{ token: string }>(
     "api/user/registration",
     {
       email,
       password,
-      role: "ADMIN",
+      role,
     }
   );
   localStorage.setItem("token", data.token);

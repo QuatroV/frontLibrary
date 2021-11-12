@@ -1,4 +1,4 @@
-import { Book, BookDescription, User } from "../globalTypes";
+import { Book, BookDescription } from "../globalTypes";
 import { $host, $authHost } from "./index";
 
 export const getAllBooksNamesAuthorsAndDescriptions = async () => {
@@ -17,22 +17,6 @@ export const getBookText = async (email: string, bookId: number) => {
   return text;
 };
 
-export const getBookTextByPage = async (
-  email: string,
-  bookId: number,
-  pageNumber: number
-) => {
-  const { data } = await $authHost.get<{ text: { text: string }[] }>(
-    "api/book/getBookText",
-    {
-      params: { email, bookId },
-    }
-  );
-  const text = data.text[0].text;
-  const pages = text.match(/(.|[\r\n]){1,100000}/g);
-  return pages && pages[pageNumber];
-};
-
 export const addNewBook = async (
   title: string,
   authorName: string,
@@ -46,8 +30,7 @@ export const addNewBook = async (
   formData.append("description", description);
   formData.append("annotation", annotation);
   formData.append("textFile", textFile);
-  console.log("formData ", formData);
-  const { data } = await $authHost.post<{ text: { text: string }[] }>(
+  const { data } = await $authHost.post<{ newBook: Book }>(
     "api/book/addNewBook",
     formData
   );
@@ -55,7 +38,7 @@ export const addNewBook = async (
 };
 
 export const deleteBook = async (bookId: number) => {
-  const data = await $authHost.delete<{ message: string }>(
+  const { data } = await $authHost.delete<{ message: string }>(
     "api/book/deleteBook",
     {
       data: { bookId },
@@ -81,7 +64,7 @@ export const updateBookInfo = async (
   description: string,
   annotation: string
 ) => {
-  const { data } = await $authHost.patch<{ bookInfo: Omit<Book, "text">[] }>(
+  const { data } = await $authHost.patch<{ success: boolean }>(
     "api/book/updateBookInfo",
     {
       bookId,

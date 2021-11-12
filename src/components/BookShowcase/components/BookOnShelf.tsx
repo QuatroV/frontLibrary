@@ -54,6 +54,8 @@ const BookOnShelf: FC<IBookOnShelf> = ({
     }
   };
 
+  const showAddToShelfButton = email && addToShelfButton;
+
   return (
     <>
       <ConfirmDeleteModal
@@ -94,7 +96,7 @@ const BookOnShelf: FC<IBookOnShelf> = ({
         <MainPartWrapper>
           <Card.Text>{book.description}</Card.Text>
           <div>
-            {addToShelfButton && (
+            {showAddToShelfButton && (
               <StyledButton variant="primary" onClick={handleAddToShelf}>
                 Добавить на полку
               </StyledButton>
